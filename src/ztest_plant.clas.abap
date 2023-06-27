@@ -1,4 +1,4 @@
-class ZTEST_PLANT definition
+ class ZTEST_PLANT definition
   public
   final
   create public .
@@ -30,11 +30,10 @@ private section.
   data MATERIALS_WITH_DESCRIPTION type TY_MATERIALS_WITH_DESCRIPTION .
   data ALV type ref to CL_SALV_TABLE .
 
-  methods GET_DESCRIPTIONS
-    returning
-      value(RT_DESCRIPTIONS) type TY_DESCRIPTIONS .
+  methods GET_DESCRIPTIONS .
   methods GET_MATERIALS .
   methods PREPARE_ALV .
+  methods GET_MATERIALS_WITH_DESCRIPTION .
 ENDCLASS.
 
 
@@ -57,8 +56,6 @@ CLASS ZTEST_PLANT IMPLEMENTATION.
          AND spras = @sy-langu
         INTO TABLE @descriptions.
     ENDIF.
-
-    rt_descriptions = descriptions.
 
   ENDMETHOD.
 
@@ -98,6 +95,19 @@ CLASS ZTEST_PLANT IMPLEMENTATION.
       get_descriptions( ).
     ENDIF.
 
+    get_materials_with_description( ).
+
+    prepare_alv( ).
+
+    TEST-SEAM display_alv.
+      alv->display( ).
+    END-TEST-SEAM.
+
+  ENDMETHOD.
+
+
+  METHOD get_materials_with_description.
+
     CLEAR materials_with_description.
     LOOP AT materials REFERENCE INTO DATA(material).
       DATA(index) = sy-tabix.
@@ -111,12 +121,6 @@ CLASS ZTEST_PLANT IMPLEMENTATION.
       material_with_description->material = material->*.
 
     ENDLOOP.
-
-    prepare_alv( ).
-
-    TEST-SEAM display_alv.
-      alv->display( ).
-    END-TEST-SEAM.
 
   ENDMETHOD.
 ENDCLASS.
